@@ -2,23 +2,15 @@ FROM nvidia/cuda:11.3.1-cudnn8-runtime-ubuntu20.04
 
 ENV CONDA_DIR /opt/conda
 
-RUN apt-get update && apt-get install -y --no-install-recommends wget && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git imagemagick python3-opencv wget && rm -rf /var/lib/apt/lists/*
 
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
   /bin/bash ~/miniconda.sh -b -p /opt/conda
 
 ENV PATH=$CONDA_DIR/bin:$PATH
 
-COPY environment.yml .
-
-RUN conda env create -f environment.yml
-
-RUN apt-get update && apt-get install -y --no-install-recommends git imagemagick python3-opencv && rm -rf /var/lib/apt/lists/*
-
-RUN git clone https://github.com/corajr/diffusion_gen /app
+COPY . /app
 
 WORKDIR /app
-
-RUN python3 -m pip install torch lpips datetime timm ipywidgets omegaconf>=2.0.0 pytorch-lightning>=1.0.8 torch-fidelity einops wandb
-
+RUN conda env create -f environment.yml
 RUN ./install.sh
