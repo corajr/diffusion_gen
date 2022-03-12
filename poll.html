@@ -1,0 +1,10 @@
+<script type="text/javascript">
+function poll(task_id) {
+	console.log("{{ url_for('get_task_status') }}");
+}
+const params = new URLSearchParams(window.location.search);
+const task_id = params.get("task_id");
+if (task_id != null) {
+    poll(task_id);
+}
+</script>

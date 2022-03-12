@@ -1,0 +1,40 @@
+<script type="text/javascript">
+let first_response = true;
+function poll(task_id) {
+    fetch("{{ url_for('get_status', task_id='uuid') }}".replace("uuid", task_id))
+	.then(response => response.json())
+	.then(({task_status, task_result}) => {
+		if (task_result && task_result.partial) {
+			let img = new Image();
+			img.src = "/" + encodeURI(task_result.partial);
+			let el = document.querySelector("#preview");
+			while (el.firstChild) {
+			  el.removeChild(el.firstChild);
+			}
+			el.appendChild(img);
+		}
+		if (task_result && task_result.total) {
+			document.querySelector("#status").innerText = (task_result.current / task_result.total).toLocaleString(undefined,{style: 'percent'});
+		}
+	    if (task_status === 'SUCCESS' || task_status === 'FAILURE') {
+			if (!first_response) {
+				window.location.search = '';
+			}
+	    } else {
+		first_response = false;
+	        setTimeout(function() {
+                   poll(task_id);
+	        }, 10000);
+	    }
+	});
+}
+
+const params = new URLSearchParams(window.location.search);
+const task_id = params.get("task_id");
+if (task_id != null) {
+    poll(task_id);
+}
+</script>
+
+<div id="status"></div>
+<div id="preview"></div>

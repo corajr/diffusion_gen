@@ -1,0 +1,37 @@
+name: diffusion_gen
+
+channels:
+- nvidia
+- pytorch
+- conda-forge
+
+dependencies:
+- python=3.9
+- ftfy
+- regex
+- tqdm
+- omegaconf
+- pytorch=1.10.2=*cuda11.3*
+- cudatoolkit=11.3
+- cudnn=8.2
+- magma-cuda113
+- pytorch-lightning
+- timm
+- wandb
+- opencv
+- pandas
+- torchvision
+- kornia
+- einops
+- transformers
+- jupyterlab
+- ipywidgets
+- pillow
+- gputil
+- psutil
+- humanize
+- fastprogress
+- matplotlib
+- flask
+- celery>=5.2
+- redis
