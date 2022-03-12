@@ -16,7 +16,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 celery = make_celery(app)
 
-
 @celery.task(bind=True)
 def generate(self, gpu="0", text="", sharpen_preset="Off", width=832, height=512, steps=250, out_name=None, init_image=""):
     kwargs = {
@@ -37,7 +36,6 @@ def generate(self, gpu="0", text="", sharpen_preset="Off", width=832, height=512
     from diffuse import main
     from argparse import Namespace
     main(argparse_args=Namespace(**kwargs), task=self)
-    # subprocess.run(["./gen.sh"] + args)
 
 @app.route("/tasks", methods=["POST"])
 def run_task():
@@ -61,6 +59,16 @@ def read_settings(fname):
         settings = json.load(f)
         return settings.get("text_prompts", {}).get('0', [])
 
+def get_gpus():
+    p = subprocess.run("nvidia-smi --query-gpu=name,uuid --format=csv,noheader", capture_output=True, shell=True)
+    rows = filter(None, p.stdout.decode("utf-8").split("\n"))
+    rows = [row.split(", ") for row in rows]
+    return [
+        {"name": row[0], "uuid": row[1]}
+        for row in rows
+    ]
+
+
 @app.route("/")
 def get_generated():
     desired_prompt = request.args.get("prompt", "")
@@ -81,7 +89,9 @@ def get_generated():
     prompt_attempts = collections.defaultdict(list)
     for prompt, img_id, thumb in zip(prompts, ids, thumbs):
         prompt_attempts[prompt].append(f"<a href=\"#{img_id}\"><img src=\"{thumb}\" /></a>")
-    form = render_template("form.html")
+    gpu_active = os.environ.get("CUDA_VISIBLE_DEVICES", "0")
+    gpus = get_gpus() if gpu_active else [{"name": "0", "uuid": ""}]
+    form = render_template("form.html", gpus=gpus)
     poll = render_template("poll.html")
 
     index = "<ul>" + "\n".join([f"<li>{prompt}<br/>{''.join(links)}</li>" for prompt, links in prompt_attempts.items()]) + "</ul>"

@@ -1,6 +1,12 @@
 <form action="{{ url_for('run_task') }}" method="post">
     <label for="text">Prompt:</label>
     <input type="text" name="text" placeholder="ponder the orb"><br>
+    <label for="gpu">GPU:</label>
+    <select name="gpu">
+	    {% for gpu in gpus %}
+	        <option value="{{ gpu["uuid"] }}">{{ gpu["name"] }}</option>
+	    {% endfor %}
+    </select><br>
     <label for="width">Width:</label>
     <input type="text" name="width" value="832"><br>
     <label for="height">Height:</label>
