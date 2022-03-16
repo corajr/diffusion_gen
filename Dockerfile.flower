@@ -25,6 +25,7 @@ RUN export FLASK_APP=app.py
 RUN pip install -r requirements.txt
 RUN pip install flower
 
+COPY --chown=nonroot:nonroot __init__.py .
 COPY --chown=nonroot:nonroot app.py .
 COPY --chown=nonroot:nonroot config.py .
 COPY --chown=nonroot:nonroot tasks.py .

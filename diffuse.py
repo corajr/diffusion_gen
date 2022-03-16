@@ -5,25 +5,6 @@ def main(argparse_args=None, task=None):
     # read args to determine GPU before importing torch and befor importing other files (torch is also imported in other files)
     os.environ["CUDA_VISIBLE_DEVICES"] = argparse_args.gpu
 
-    if argparse_args.setup:
-        get_ipython().system('python3 -m pip install torch lpips datetime timm ipywidgets omegaconf>=2.0.0 pytorch-lightning>=1.0.8 torch-fidelity einops wandb')    
-        get_ipython().system('git clone https://github.com/CompVis/latent-diffusion.git')
-        get_ipython().system('git clone https://github.com/openai/CLIP')
-        get_ipython().system('pip3 install -e ./CLIP')
-        get_ipython().system('git clone https://github.com/assafshocher/ResizeRight.git')
-        get_ipython().system('git clone https://github.com/crowsonkb/guided-diffusion')
-        get_ipython().system('python3 -m pip install -e ./guided-diffusion')
-        
-        get_ipython().system('apt install imagemagick')
-        
-        #SuperRes
-        get_ipython().system('git clone https://github.com/CompVis/latent-diffusion.git')
-        get_ipython().system('git clone https://github.com/CompVis/taming-transformers')
-        get_ipython().system('pip install -e ./taming-transformers')
-        
-        
-
-
     # sys.path.append('./SLIP')
     sys.path.append('./ResizeRight')
     sys.path.append("latent-diffusion")
@@ -36,8 +17,6 @@ def main(argparse_args=None, task=None):
 
     def alpha_sigma_to_t(alpha, sigma):
         return torch.atan2(sigma, alpha) * 2 / math.pi
-
-
 
     root_path = argparse_args.root_path
     initDirPath = f'{root_path}/init_images'
@@ -94,18 +73,14 @@ def main(argparse_args=None, task=None):
     import ipywidgets as widgets
     import os
     sys.path.append(".")
-    sys.path.append('./taming-transformers')
-    from taming.models import vqgan # checking correct import from taming
+    # sys.path.append('./taming-transformers')
+    # from taming.models import vqgan # checking correct import from taming
     from torchvision.datasets.utils import download_url
 
-    sys.path.append("./latent-diffusion")
-    if argparse_args.setup:
-        get_ipython().run_line_magic('cd', "latent-diffusion")
-    from ldm.util import instantiate_from_config
+    # sys.path.append("./latent-diffusion")
+    # from ldm.util import instantiate_from_config
     # from ldm.models.diffusion.ddim import DDIMSampler
-    from ldm.util import ismap
-    if argparse_args.setup:
-        get_ipython().run_line_magic('cd', '..')
+    # from ldm.util import ismap
     #from google.colab import files
     from IPython.display import Image as ipyimg
     from numpy import asarray
@@ -121,7 +96,7 @@ def main(argparse_args=None, task=None):
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print('Using device:', device)
 
-    if torch.cuda.get_device_capability(device) == (8,0): ## A100 fix thanks to Emad
+    if torch.cuda.is_available() and torch.cuda.get_device_capability(device) == (8,0): ## A100 fix thanks to Emad
       print('Disabling CUDNN for A100 gpu', file=sys.stderr)
       torch.backends.cudnn.enabled = False
 
@@ -1468,6 +1443,8 @@ def main(argparse_args=None, task=None):
         
         #0:['base_images/tree_of_life/tree_new_1.jpeg',],
     }
+    if argparse_args.setup:
+      sys.exit()
 
 
     # # 5. Diffuse!

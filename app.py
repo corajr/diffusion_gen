@@ -89,8 +89,8 @@ def get_generated():
     prompt_attempts = collections.defaultdict(list)
     for prompt, img_id, thumb in zip(prompts, ids, thumbs):
         prompt_attempts[prompt].append(f"<a href=\"#{img_id}\"><img src=\"{thumb}\" /></a>")
-    gpu_active = os.environ.get("CUDA_VISIBLE_DEVICES", "0")
-    gpus = get_gpus() if gpu_active else [{"name": "0", "uuid": ""}]
+    gpu_active = os.environ.get("CUDA_VISIBLE_DEVICES")
+    gpus = get_gpus() if gpu_active else [{"name": "0", "uuid": "0"}]
     form = render_template("form.html", gpus=gpus)
     poll = render_template("poll.html")
 

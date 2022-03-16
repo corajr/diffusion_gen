@@ -1,7 +1,8 @@
 #!/bin/bash
 
-source $CONDA_PREFIX/etc/profile.d/conda.sh
-conda activate diffusion_gen
-pip install Redis
-ipython3 diffuse.py -- --setup=True
+if [[ "$CONDA_DEFAULT_ENV" != "diffusion_gen" ]]; then
+	source ${CONDA_DIR:-~/miniconda3}/etc/profile.d/conda.sh
+	conda activate diffusion_gen
+fi
+
 celery -A app.celery worker -c 1 -E
