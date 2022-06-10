@@ -35,3 +35,11 @@ dependencies:
 - flask
 - celery>=5.2
 - redis
+- pip:
+  - git+https://github.com/openai/CLIP
+  - git+https://github.com/crowsonkb/guided-diffusion
+  - lpips
+  - datetime
+  - pytorch-lightning>=1.0.8
+  - torch-fidelity
+  - Redis

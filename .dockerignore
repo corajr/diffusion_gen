@@ -1,3 +1,5 @@
+!out_diffusion/models/secondary_model_imagenet_2.pth
+!out_diffusion/models/512x512_diffusion_uncond_finetune_008100.pt
 # cloned repos
 ResizeRight/
 guided-diffusion/

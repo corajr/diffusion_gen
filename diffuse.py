@@ -7,7 +7,7 @@ def main(argparse_args=None, task=None):
 
     # sys.path.append('./SLIP')
     sys.path.append('./ResizeRight')
-    sys.path.append("latent-diffusion")
+    sys.path.append('./latent-diffusion')
 
     from secondary_diffusion import SecondaryDiffusionImageNet, SecondaryDiffusionImageNet2 
     from ddim_sampler import DDIMSampler

@@ -15,4 +15,14 @@ WORKDIR /app
 RUN conda env create -f environment.yml
 
 COPY . /app
+
+# ENV MODEL_URL http://batbot.tv/ai/models/guided-diffusion/
+# ENV DIFFUSION_ROOT /mnt/c/Users/coraj/diffusion/diffusion_gen
+# COPY $DIFFUSION_ROOT/out_diffusion/models/512x512_diffusion_uncond_finetune_008100.pt /app/out_diffusion/models
+# COPY $DIFFUSION_ROOT/out_diffusion/models/secondary_model_imagenet_2.pth /app/out_diffusion/models
+# RUN python3 -c 'import clip; clip.load("ViTB16"); clip.load("ViTB32"); clip.load("RN50")'
+
+# RUN cd /app/out_diffusion/models && wget $MODEL_URL/512x512_diffusion_uncond_finetune_008100.pt
+# RUN cd /app/out_diffusion/models && wget https://v-diffusion.s3.us-west-2.amazonaws.com/secondary_model_imagenet_2.pth
+
 RUN ./install.sh

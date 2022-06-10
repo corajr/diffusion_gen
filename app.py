@@ -17,9 +17,8 @@ app.config.from_object('config')
 celery = make_celery(app)
 
 @celery.task(bind=True)
-def generate(self, gpu="0", text="", sharpen_preset="Off", width=832, height=512, steps=250, out_name=None, init_image=""):
+def generate(self, text="", sharpen_preset="Off", width=832, height=512, steps=250, out_name=None, init_image=""):
     kwargs = {
-        'gpu': gpu,
         'text': text,
         'root_path': 'out_diffusion',
         'setup': False,
@@ -89,9 +88,7 @@ def get_generated():
     prompt_attempts = collections.defaultdict(list)
     for prompt, img_id, thumb in zip(prompts, ids, thumbs):
         prompt_attempts[prompt].append(f"<a href=\"#{img_id}\"><img src=\"{thumb}\" /></a>")
-    gpu_active = os.environ.get("CUDA_VISIBLE_DEVICES")
-    gpus = get_gpus() if gpu_active else [{"name": "0", "uuid": "0"}]
-    form = render_template("form.html", gpus=gpus)
+    form = render_template("form.html")
     poll = render_template("poll.html")
 
     index = "<ul>" + "\n".join([f"<li>{prompt}<br/>{''.join(links)}</li>" for prompt, links in prompt_attempts.items()]) + "</ul>"
