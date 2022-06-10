@@ -2,8 +2,6 @@ def main(argparse_args=None, task=None):
     import os
     from os import path
     import sys
-    # read args to determine GPU before importing torch and befor importing other files (torch is also imported in other files)
-    os.environ["CUDA_VISIBLE_DEVICES"] = argparse_args.gpu
 
     # sys.path.append('./SLIP')
     sys.path.append('./ResizeRight')
@@ -93,7 +91,7 @@ def main(argparse_args=None, task=None):
 
 
     import torch
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print('Using device:', device)
 
     if torch.cuda.is_available() and torch.cuda.get_device_capability(device) == (8,0): ## A100 fix thanks to Emad
